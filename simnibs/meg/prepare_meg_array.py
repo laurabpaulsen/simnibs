@@ -34,8 +34,8 @@ def prepare_meg_sensor_array(
     if fname.suffix != ".csv":
         fname = fname.with_suffix(".csv")
 
-    # # sensors are in headspace and m so transform to MRI coordinates
-    # and mm
+    # # sensors are in device space so transform to MRI coordinates 
+    # NOTE: see if we need to change the m / mm ???
     trans_dev_head = info["dev_head_t"]
     trans_head_mri = mne.transforms._ensure_trans(trans_head_mr, "head", "mri")    
     logger.info(f"Transforming from device to head using {trans_dev_head}")
@@ -51,6 +51,7 @@ def prepare_meg_sensor_array(
 
     if not fname.exists():
         fname.parent.mkdir(parents=True)
+    
     write_csv_positions(
         filename = fname, 
         types = [coil["type"] for coil in coilset],
